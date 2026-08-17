@@ -10,14 +10,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./ALIET_CGPA_Calculator_APK_READY
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Check project files
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files:"
+          ls -la
 
       - name: Install dependencies
         run: npm install
@@ -32,14 +43,23 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
 
-      - name: Build APK
-        working-directory: android
+      - name: Make Gradle executable
+        working-directory: ./ALIET_CGPA_Calculator_APK_READY/android
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        working-directory: ./ALIET_CGPA_Calculator_APK_READY/android
         run: ./gradlew assembleDebug
+
+      - name: Check APK
+        run: |
+          echo "APK files:"
+          find android/app/build/outputs/apk -type f -name "*.apk" -print
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ALIET-CGPA-Calculator-APK
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: ALIET_CGPA_Calculator_APK_READY/android/app/build/outputs/apk/debug/app-debug.apk
