@@ -10,10 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./ALIET_CGPA_Calculator_APK_READY
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,7 +23,7 @@ jobs:
         run: |
           echo "Current directory:"
           pwd
-          echo "Files:"
+          echo "Project files:"
           ls -la
 
       - name: Install dependencies
@@ -46,11 +42,11 @@ jobs:
           java-version: "21"
 
       - name: Make Gradle executable
-        working-directory: ./ALIET_CGPA_Calculator_APK_READY/android
+        working-directory: android
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        working-directory: ./ALIET_CGPA_Calculator_APK_READY/android
+        working-directory: android
         run: ./gradlew assembleDebug
 
       - name: Check APK
@@ -62,4 +58,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ALIET-CGPA-Calculator-APK
-          path: ALIET_CGPA_Calculator_APK_READY/android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
